@@ -3,6 +3,7 @@ require_relative '../models/address_book'
 RSpec.describe AddressBook do
 
   let(:book) {AddressBook.new}
+  let(:book2) {AddressBook.new}
 
   def check_entry(entry, expected_name, expected_number, expcected_emaiL)
     expect(entry.name).to eq expected_name
@@ -56,17 +57,21 @@ RSpec.describe AddressBook do
       entry_one = book.entries[0]
 
       check_entry(entry_one, "Bill", "555-555-4854", "bill@blocmail.com")
+
     end
 
     it "imports the 2nd entry" do
       book.import_from_csv("entries.csv")
       entry_two = book.entries[1]
+
       check_entry(entry_two, "Bob", "555-555-5415", "bob@blocmail.com")
     end
 
     it "imports the 3rd entry" do
       book.import_from_csv("entries.csv")
+      book2.import_from_csv("entries_2.csv")
       entry_three = book.entries[2]
+      bk2_entry_three = book2.entries[2]
       check_entry(entry_three, "Joe", "555-555-3660", "joe@blocmail.com")
     end
 
@@ -80,6 +85,36 @@ RSpec.describe AddressBook do
       book.import_from_csv("entries.csv")
       entry_five = book.entries[4]
       check_entry(entry_five, "Sussie", "555-555-2036", "sussie@blocmail.com")
+    end
+
+    describe "#imports from second CSV" do
+      it "imports the correct number of entries" do
+        book.import_from_csv("entries_2.csv")
+        book_size = book.entries.size
+
+        expect(book_size).to eq 3
+      end
+
+      it "imports the 1st entry" do
+        book.import_from_csv("entries_2.csv")
+        entry_one = book.entries[0]
+
+        check_entry(entry_one,"Andre", "510-555-4444", "andre@blocmail.com")
+      end
+
+      it "imports the 2nd entry" do
+        book.import_from_csv("entries_2.csv")
+        entry_two = book.entries[1]
+
+        check_entry(entry_two, "Aubrey", "510-555-3333", "aubrey@blocmail.com")
+      end
+
+      it "imports the 3rd entry" do
+        book.import_from_csv("entries_2.csv")
+        entry_three = book.entries[2]
+
+        check_entry(entry_three, "Perla", "510-555-2222", "perla@blocmail.com")
+      end
     end
 
   end
