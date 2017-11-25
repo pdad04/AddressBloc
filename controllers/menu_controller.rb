@@ -12,8 +12,9 @@ class MenuController
     puts "1 - View all entries"
     puts "2 - Create an entry"
     puts "3 - Search for an entry"
-    puts "4 - Import entries from a CSV"
-    puts "5 - Exit"
+    puts "4 - View entry number n"
+    puts "5 - Import entries from a CSV"
+    puts "6 - Exit"
     print "Enter your selection: "
 
     selection = gets.to_i
@@ -33,9 +34,12 @@ class MenuController
         main_menu
       when 4
         system "clear"
+        view_entry
+      when 5
+        system "clear"
         read_csv
         main_menu
-      when 5
+      when 6
         puts "Good-bye!"
         exit(0)
       else
@@ -55,6 +59,37 @@ class MenuController
 
     system "clear"
     puts "End of entries"
+  end
+
+  def view_entry
+    system "clear"
+
+    if address_book.entries.count == 0
+      puts "There are no entries in the address book!"
+      main_menu
+    end
+
+    print "What entry would you like to view? "
+    entry = gets.chomp.to_i
+
+    #check to ensure an integer entered from keyboard
+    #entering a string character will be converted to integer 0
+    #so check ensures that 0 is not entered.
+    #because users think of entries starting from 1 anyways, a user should not
+    #enter 0.
+    while entry > address_book.entries.count || entry == 0
+      print "#{entry} is not a valid entry in the address book, please select another entry: "
+      entry = gets.chomp.to_i
+    end
+
+      system "clear"
+
+      #display addressbook entry, by subtracting 1 from what user entered.
+      #so that the correct location is displayed. User wants to see 1st entry
+      #would mean index 0 in the array.
+      puts address_book.entries[entry - 1].to_s
+      main_menu
+
   end
 
   def create_entry
@@ -100,5 +135,5 @@ class MenuController
         puts "#{selection} is not a valid input"
         entry_submenu(entry)
       end
-    end  
+    end
 end
